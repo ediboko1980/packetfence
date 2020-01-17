@@ -243,7 +243,6 @@ BEGIN {
         %ConfigAuthenticationLdap
         %ConfigAuthenticationRadius
         %ConfigSSL
-        %ConfigSSL
         %ConfigTLS
         %ConfigOCSP
     );
