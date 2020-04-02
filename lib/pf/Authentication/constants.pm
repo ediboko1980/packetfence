@@ -147,7 +147,7 @@ Constants related to actions rules.
 
 package Actions;
 
-=item MARK_AS_SPONSOR, SET_ACCESS_LEVEL, SET_ROLE, SET_ACCESS_DURATION, SET_ACCESS_DURATIONS, SET_UNREG_DATE SET_TIME_BALANCE, SET_BANDWIDTH_BALANCE
+=item MARK_AS_SPONSOR, SET_ACCESS_LEVEL, SET_ROLE, SET_ACCESS_DURATION, SET_ACCESS_DURATIONS, SET_UNREG_DATE SET_TIME_BALANCE, SET_BANDWIDTH_BALANCE, SET_ROLE_FROM_SOURCE, SET_ACCESS_DURATION_FROM_SOURCE
 
 Available actions
 
@@ -162,6 +162,8 @@ Readonly::Scalar our $SET_ACCESS_DURATIONS => "set_access_durations";
 Readonly::Scalar our $SET_UNREG_DATE => "set_unreg_date";
 Readonly::Scalar our $SET_TIME_BALANCE => "set_time_balance";
 Readonly::Scalar our $SET_BANDWIDTH_BALANCE => "set_bandwidth_balance";
+Readonly::Scalar our $SET_ROLE_FROM_SOURCE => "set_role_from_source";
+Readonly::Scalar our $SET_ACCESS_DURATION_FROM_SOURCE => "set_access_duration_from_source";
 =item ACTIONS
 
 List of available actions
@@ -169,16 +171,18 @@ List of available actions
 =cut
 
 Readonly::Hash our %ACTIONS => (
-    $Rules::AUTH    => [ $SET_ROLE, $SET_ACCESS_DURATION, $SET_UNREG_DATE, $SET_TIME_BALANCE, $SET_BANDWIDTH_BALANCE ],
+    $Rules::AUTH    => [ $SET_ROLE, $SET_ACCESS_DURATION, $SET_UNREG_DATE, $SET_TIME_BALANCE, $SET_BANDWIDTH_BALANCE, $SET_ROLE_FROM_SOURCE, $SET_ACCESS_DURATION_FROM_SOURCE ],
     $Rules::ADMIN   => [ $SET_ACCESS_LEVEL, $MARK_AS_SPONSOR, $SET_TENANT_ID, $SET_ACCESS_DURATIONS ],
 );
 
 Readonly::Hash our %ACTION_CLASS_TO_TYPE => (
-    $SET_ROLE               => $Rules::AUTH,
-    $SET_UNREG_DATE         => $Rules::AUTH,
-    $SET_ACCESS_DURATION    => $Rules::AUTH,
-    $SET_TIME_BALANCE       => $Rules::AUTH,
-    $SET_BANDWIDTH_BALANCE  => $Rules::AUTH,
+    $SET_ROLE                        => $Rules::AUTH,
+    $SET_UNREG_DATE                  => $Rules::AUTH,
+    $SET_ACCESS_DURATION             => $Rules::AUTH,
+    $SET_TIME_BALANCE                => $Rules::AUTH,
+    $SET_BANDWIDTH_BALANCE           => $Rules::AUTH,
+    $SET_ROLE_FROM_SOURCE            => $Rules::AUTH,
+    $SET_ACCESS_DURATION_FROM_SOURCE => $Rules::AUTH,
 
     $SET_ACCESS_LEVEL       => $Rules::ADMIN,
     $SET_TENANT_ID          => $Rules::ADMIN,
@@ -189,25 +193,31 @@ Readonly::Hash our %ACTION_CLASS_TO_TYPE => (
 Readonly::Hash our %ALLOWED_ACTIONS => (
     $MARK_AS_SPONSOR  => {$MARK_AS_SPONSOR  => 1},
     $SET_ACCESS_LEVEL => {$SET_ACCESS_LEVEL => 1},
-    $SET_TENANT_ID    => {$SET_TENANT_ID => 1},
+    $SET_TENANT_ID    => {$SET_TENANT_ID    => 1},
     $SET_ROLE         => {$SET_ROLE         => 1},
     $SET_UNREG_DATE   => {
-        $SET_UNREG_DATE      => 1,
-        $SET_ACCESS_DURATION => 1,
+        $SET_UNREG_DATE                  => 1,
+        $SET_ACCESS_DURATION             => 1,
+        $SET_ACCESS_DURATION_FROM_SOURCE => 1,
     },
-    $SET_TIME_BALANCE => {$SET_TIME_BALANCE => 1},
-    $SET_BANDWIDTH_BALANCE => {$SET_BANDWIDTH_BALANCE => 1},
-    $SET_ACCESS_DURATIONS => {$SET_ACCESS_DURATIONS => 1},
+    $SET_TIME_BALANCE                => {$SET_TIME_BALANCE                => 1},
+    $SET_BANDWIDTH_BALANCE           => {$SET_BANDWIDTH_BALANCE           => 1},
+    $SET_ACCESS_DURATIONS            => {$SET_ACCESS_DURATIONS            => 1},
+    $SET_ACCESS_DURATION_FROM_SOURCE => {$SET_ACCESS_DURATION_FROM_SOURCE => 1},
+    $SET_ROLE_FROM_SOURCE            => {$SET_ROLE_FROM_SOURCE            => 1},
 );
 
 Readonly::Hash our %MAPPED_ACTIONS => (
-    $MARK_AS_SPONSOR        => $MARK_AS_SPONSOR,
-    $SET_ACCESS_LEVEL       => $SET_ACCESS_LEVEL,
-    $SET_TENANT_ID          => $SET_TENANT_ID,
-    $SET_ROLE               => $SET_ROLE,
-    $SET_UNREG_DATE         => $SET_UNREG_DATE,
-    $SET_ACCESS_DURATION    => $SET_UNREG_DATE,
-    $SET_ACCESS_DURATIONS   => $SET_ACCESS_DURATIONS,
+    $MARK_AS_SPONSOR                 => $MARK_AS_SPONSOR,
+    $SET_ACCESS_LEVEL                => $SET_ACCESS_LEVEL,
+    $SET_TENANT_ID                   => $SET_TENANT_ID,
+    $SET_ROLE                        => $SET_ROLE,
+    $SET_UNREG_DATE                  => $SET_UNREG_DATE,
+    $SET_ACCESS_DURATION             => $SET_UNREG_DATE,
+    $SET_ACCESS_DURATIONS            => $SET_ACCESS_DURATIONS,
+    $SET_ACCESS_DURATION_FROM_SOURCE => $SET_ACCESS_DURATION_FROM_SOURCE,
+    $SET_ROLE_FROM_SOURCE            => $SET_ROLE_FROM_SOURCE,
+
 );
 
 =back
