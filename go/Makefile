@@ -64,6 +64,12 @@ pfacct:
         cd - && \
         mv acct/acct pfacct
 
+.PHONY: pfcertmanager
+pfacct:
+	cd certmanager && \
+        go build && \
+        cd - && \
+        mv certmanager/certmanager pfcertmanager
 
 
 .PHONY: clean-caddy-src
