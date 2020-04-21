@@ -363,13 +363,21 @@ meta => {
                     default     => "enabled",
                     placeholder => undef,
                     required => $false,
-                    type => "string"
+                    type => "string",
+                    allowed => [
+                        {text => 'enabled', value => 'enabled'},
+                        {text => 'disabled', value => 'disabled'},
+                    ],
                 },
                 last_if_match => {
                     default     => undef,
                     placeholder => undef,
                     required => $false,
-                    type => "string"
+                    type => "string",
+                    allowed => [
+                        {text => 'enabled', value => 'enabled'},
+                        {text => 'disabled', value => 'disabled'},
+                    ],
                 },
                 name => {
                     default     => undef,
@@ -451,9 +459,12 @@ meta => {
     status => {
         default     => "enabled",
         placeholder => undef,
-        required =>
-          $false,
-        type => "string"
+        required => $false,
+        type => "string",
+        allowed => [
+            {text => 'enabled', value => 'enabled'},
+            {text => 'disabled', value => 'disabled'},
+        ],
     },
     type => {
         default     => "regex",
