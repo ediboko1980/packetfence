@@ -558,6 +558,7 @@ type ClusterServer struct {
 }
 
 type Certificate struct {
+	StructConfig
 	Cert         string `json:"cert"`
 	CertType     string `json:"type"`
 	Key          string `json:"key"`
@@ -566,12 +567,14 @@ type Certificate struct {
 }
 
 type Fast struct {
+	StructConfig
 	PacOpaqueKey      string `json:"pac_opaque_key"`
 	AuthorityIdentity string `json:"authority_identity"`
 	TLS               string `json:"tls"`
 }
 
 type OCSP struct {
+	StructConfig
 	OCSPSoftfail        string `json:"ocsp_softfail"`
 	OCSPTimeout         string `json:"ocsp_timeout"`
 	OCSPUseNonce        string `json:"ocsp_use_nonce"`
@@ -581,6 +584,7 @@ type OCSP struct {
 }
 
 type TLS struct {
+	StructConfig
 	CertificateProfile Certificate `json:"certificate_profile"`
 	DhFile             string      `json:"dh_file"`
 	CAPath             string      `json:"ca_path"`
@@ -590,6 +594,7 @@ type TLS struct {
 }
 
 type EAP struct {
+	StructConfig
 	DefaultEAPType             string         `json:"default_eap_type"`
 	TLS                        map[string]TLS `json:"tls"`
 	TTLSProfile                string         `json:"ttls_tlsprofile"`
