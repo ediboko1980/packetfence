@@ -65,7 +65,7 @@ pfacct:
         mv acct/acct pfacct
 
 .PHONY: pfcertmanager
-pfacct:
+pfcertmanager:
 	cd certmanager && \
         go build && \
         cd - && \
