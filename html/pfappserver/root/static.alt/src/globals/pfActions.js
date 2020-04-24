@@ -190,6 +190,11 @@ export const pfActions = {
     text: i18n.t('Access duration'),
     types: [fieldType.DURATION_BY_ACL_USER]
   },
+  set_access_duration_from_source: {
+    value: 'set_access_duration_from_source',
+    text: i18n.t('Access duration from source'),
+    types: [fieldType.SELECTONE]
+  },
   set_access_durations: {
     value: 'set_access_durations',
     text: i18n.t('Sponsor access durations'),
@@ -228,6 +233,11 @@ export const pfActions = {
     value: 'set_role',
     text: i18n.t('Role'),
     types: [fieldType.ROLE_BY_ACL_USER]
+  },
+  set_role_from_source: {
+    value: 'set_role_from_source',
+    text: i18n.t('Role from source'),
+    types: [fieldType.SELECTONE]
   },
   set_tenant_id: {
     value: 'set_tenant_id',
@@ -284,15 +294,6 @@ export const pfActions = {
     value: 'unregdate_from_sponsor_source',
     text: i18n.t('Set unregistration date from the sponsor source'),
     types: [fieldType.NONE]
-  },
-  set_access_duration_from_source: {
-    value: 'set_access_duration_from_source',
-    text: i18n.t('Access duration from source'),
-    types: [fieldType.NONE]
-  },
-  set_role_from_source: {
-    value: 'set_role_from_source',
-    text: i18n.t('Role from source'),
-    types: [fieldType.NONE]
-  },
+  }
+  /* keys are alphabetical, please insert new actions in order above */
 }
