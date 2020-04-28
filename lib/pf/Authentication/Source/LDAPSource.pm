@@ -98,7 +98,9 @@ sub available_attributes {
     }
     push(@$super_attributes, @radius_attributes);
     push(@$super_attributes, @ldap_attributes);
-    @$super_attributes = uniq @$super_attributes;
+    my %seen;
+    @$super_attributes = grep { ! $seen{$_->{value}}++ } @$super_attributes;
+
     return [sort { lc($a->{value}) cmp lc($b->{value}) } @$super_attributes]
 }
 
