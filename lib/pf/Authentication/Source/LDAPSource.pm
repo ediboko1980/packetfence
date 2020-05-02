@@ -89,14 +89,12 @@ sub available_attributes {
 
     my $super_attributes = $self->SUPER::available_attributes;
     my @ldap_attributes = $self->ldap_attributes;
-    my @radius_attributes = $self->radius_attributes;
 
     # We check if our username attribute is present, if not we add it.
     my $usernameattribute = $self->{'usernameattribute'};
     if ( length ($usernameattribute) && !grep {$_->{value} eq $usernameattribute } @ldap_attributes ) {
         push (@ldap_attributes, { value => $usernameattribute, type => $Conditions::LDAP_ATTRIBUTE });
     }
-    push(@$super_attributes, @radius_attributes);
     push(@$super_attributes, @ldap_attributes);
     my %seen;
     @$super_attributes = grep { ! $seen{$_->{value}}++ } @$super_attributes;
@@ -115,15 +113,16 @@ sub ldap_attributes {
     return map { { value => $_, type => $Conditions::LDAP_ATTRIBUTE } } @{$Config{advanced}->{ldap_attributes}};
 }
 
-=head2 radius_attributes
+=head2 common_attributes
 
-get the radius attributes
+Add the radius attributes to the common attributes
 
 =cut
 
-sub radius_attributes {
-    my ($self) = @_;
-    my @radius_attributes = map { {value => $_, type => $Conditions::SUBSTRING}} qw(
+sub common_attributes {
+    my $self = shift;
+    my $super_common_attributes = $self->SUPER::common_attributes;
+    my @radius_attributes = map { {value => "radius_request.".$_, type => $Conditions::SUBSTRING}} qw(
         TLS-Client-Cert-Serial
         TLS-Client-Cert-Expiration
         TLS-Client-Cert-Issuer
@@ -139,8 +138,11 @@ sub radius_attributes {
         TLS-Cert-Common-Name
         TLS-Client-Cert-Subject-Alt-Name-Dns
     );
-    push(@radius_attributes, map { {value => $_, type => $Conditions::SUBSTRING}} @{$Config{radius_configuration}->{radius_attributes}});
-    return @radius_attributes;
+
+    push(@radius_attributes, map { {value => "radius_request.".$_, type => $Conditions::SUBSTRING}} @{$Config{radius_configuration}->{radius_attributes}});
+    push(@$super_common_attributes, @radius_attributes);
+
+    return $super_common_attributes;
 }
 
 =head2 authenticate
@@ -348,23 +350,6 @@ sub match_in_subclass {
     my ($self, $params, $rule, $own_conditions, $matching_conditions) = @_;
     my $filter = $self->ldap_filter_for_conditions($own_conditions, $rule->match, $self->{'usernameattribute'}, $params);
     my $id = $self->id;
-
-    my $return_radius = undef;
-    my $return_ldap = undef;
-
-    my $radius_params = $params->{radius_request};
-    # If match any we just want the first
-    my @conditions;
-    if ($rule->match eq $Rules::ANY) {
-        my $c = first { $self->match_condition($_, $radius_params) } @$own_conditions;
-        push @conditions, $c if $c;
-    }
-    else {
-        @conditions = grep { $self->match_condition($_, $radius_params) } @$own_conditions;
-    }
-    push @$matching_conditions, @conditions if @conditions;
-    $return_radius = $params->{'username'} if @conditions;
-
     if (! defined($filter)) {
         $logger->error("[$id] Missing parameters to construct LDAP filter");
         $pf::StatsD::statsd->increment(called() . "." . $id . ".error.count" );
@@ -372,13 +357,7 @@ sub match_in_subclass {
     }
     my $rule_id = $rule->id;
     $logger->debug("[$id $rule_id] Searching for $filter, from $self->{'basedn'}, with scope $self->{'scope'}");
-    $return_ldap = $self->_match_in_subclass($filter, $params, $rule, $own_conditions, $matching_conditions);
-
-    if (defined($return_ldap)) {
-        return $return_ldap;
-    } else {
-        return $return_radius;
-    }
+    return $self->_match_in_subclass($filter, $params, $rule, $own_conditions, $matching_conditions);
 }
 
 =head2 _match_in_subclass
