@@ -77,3 +77,9 @@ dot1x_eap_peap.profiles.wired.filters.connection_sub_type: MS-EAP-Authentication
 mac_authentication.profiles.wired.id: catch_wired_mac_authentication
 mac_authentication.profiles.wired.description: Wired Mac authentication with unreg_on_accounting_stop
 mac_authentication.profiles.wired.filters.connection_type: Ethernet-NoEAP
+
+################################################################################
+## wired_mac_auth variables
+#################################################################################
+role_headless_device: headless_device
+vlan_headless_device: 20
