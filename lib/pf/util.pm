@@ -19,6 +19,7 @@ use warnings;
 no warnings 'portable';
 
 use Cwd;
+use Number::Range;
 use File::Basename;
 use POSIX::2008;
 use Net::MAC::Vendor;
@@ -106,6 +107,7 @@ BEGIN {
         mac2dec
         expand_ordered_array
         make_node_id split_node_id
+        random_from_range
     );
 }
 
@@ -1648,6 +1650,20 @@ sub split_node_id {
     my $tenant_id = $node_id >> 48;
     my $mac = clean_mac(sprintf("%012x",$node_id & 0x0000FFFFFFFFFFFF));
     return ($tenant_id, $mac);
+}
+
+=head2 random_from_range
+
+return random int in a range
+
+=cut
+
+sub random_from_range {
+    my ($value) = @_;
+    my $range = Number::Range->new($value);
+    my $count = $range->size;
+    my @array = $range->range;
+    return $array[rand($count)];
 }
 
 =back
