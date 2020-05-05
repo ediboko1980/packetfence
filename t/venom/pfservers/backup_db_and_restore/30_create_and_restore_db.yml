@@ -1,0 +1,15 @@
+name: create db and restore db backup
+version: 2
+testcases:
+- name: create_db_pf
+  steps:
+  - script: mysql -u {{.db_user}} -p{{.password_db_user}} -e "create database pf;"
+    assertions:
+    - result.code ShouldEqual 0
+
+- name: inject_backup_db
+  steps:
+  - script: 'mysql -u {{.db_user}} -p{{.password_db_user}} pf < /root/backup/{{.backup_db_uncompressed}}'
+    assertions:
+    - result.code ShouldEqual 0
+

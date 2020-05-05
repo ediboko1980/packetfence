@@ -1,0 +1,10 @@
+name: remove database
+version: 2
+testcases:
+- name: remove_db_pf
+  steps:
+  - script: mysql -u {{.db_user}} -p{{.password_db_user}} -e "drop database pf;"
+    assertions:
+    - result.code ShouldEqual 0
+
+

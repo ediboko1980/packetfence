@@ -1,0 +1,9 @@
+name: unzip db backup
+version: 2
+testcases:
+- name: unzip_db_backup
+  steps:
+  - script: 'gunzip /root/backup/{{.backup_db_compressed}}'
+    assertions:
+    - result.code ShouldEqual 0
+

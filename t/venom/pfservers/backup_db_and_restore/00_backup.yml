@@ -1,0 +1,9 @@
+name: Backup and restore 
+version: 2
+testcases:
+- name: Backup
+  steps:
+  - script: /usr/local/pf/addons/backup-and-maintenance.sh
+    assertions:
+    - result.code ShouldEqual 0
+
