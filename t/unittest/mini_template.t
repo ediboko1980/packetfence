@@ -98,6 +98,18 @@ BEGIN {
         },
         {
             'tmpl' => [ 'F', 'bob', [ [ 'V', 'mac' ] ] ],
+            'in' => '${ bob($mac) }',
+            'info' => {
+                funcs => {
+                    'bob' => undef,
+                },
+                vars => {
+                    'mac' => undef,
+                },
+            },
+        },
+        {
+            'tmpl' => [ 'F', 'bob', [ [ 'V', 'mac' ] ] ],
             'in' => '${bob($mac)}',
             'info' => {
                 funcs => {
@@ -240,7 +252,7 @@ BEGIN {
 
 use pf::mini_template;
 
-use Test::More tests => (scalar @VALID_TEMPLATES) * 2 + (scalar @TEMPLATE_OUTPUT) + 1;
+use Test::More tests => (scalar @VALID_TEMPLATES) * 2 + (scalar @TEMPLATE_OUTPUT) + 2;
 
 #This test will running last
 use Test::NoWarnings;
@@ -252,6 +264,10 @@ for my $test (@VALID_TEMPLATES) {
 for my $test (@TEMPLATE_OUTPUT) {
     test_template_output($test);
 }
+
+my $template = pf::mini_template->new('${bob($k)}');
+my $out = $template->process({ k => 2 }, { bob => sub { $_[0] * 4 } });
+is($out, 8, "Custom funcs");
 
 sub test_valid_string {
     my ($test) = @_;
@@ -277,9 +293,6 @@ sub test_template_output {
     my $out = $template->process($test->{input});
     is ($out, $test->{out}, "testing '$tmpl'");
 }
-
-
-
 
 =head1 AUTHOR
 
@@ -309,4 +322,3 @@ USA.
 =cut
 
 1;
-
