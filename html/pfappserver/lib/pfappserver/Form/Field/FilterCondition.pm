@@ -77,7 +77,8 @@ has_field 'op' => (
               date_is_before
               date_is_after)
         ),
-        make_options( [qw(value)], qw(time_period not_time_period) )
+        make_options( [qw(value)], qw(time_period not_time_period) ),
+        make_options( [], 'true'),
       ],
 );
 
