@@ -108,6 +108,7 @@ BEGIN {
         expand_ordered_array
         make_node_id split_node_id
         random_from_range
+        extract
     );
 }
 
@@ -1664,6 +1665,25 @@ sub random_from_range {
     my $count = $range->size;
     my @array = $range->range;
     return $array[rand($count)];
+}
+
+=head2 extract
+
+extract
+
+=cut
+
+sub extract {
+    my ($str, $match, $template, $default) = @_;
+    if ($str =~ /$match/) {
+        my @start = @-;
+        my @end = @+;
+        my $out = $template;
+        $out =~ s/(\$(\d+))/substr($str, $start[$2], $end[$2] - $start[$2])/ge;
+        return $out;
+    }
+
+    return $default;
 }
 
 =back
