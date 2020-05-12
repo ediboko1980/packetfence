@@ -267,7 +267,7 @@ sub match_in_subclass {
 sub match_condition {
   my ($self, $condition, $params) = @_;
 
-  my $r = $condition->matches($condition->attribute, $params->{$condition->attribute});
+  my $r = $condition->matches($condition->attribute, $params->{$condition->attribute}, $params);
 
   return $r;
 }
