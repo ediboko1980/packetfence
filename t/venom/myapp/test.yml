@@ -1,0 +1,11 @@
+name: Title of TestSuite
+testcases:
+
+  - name: Load database fixtures
+    steps:
+      - type: dbfixtures
+        database: mysql
+        dsn: root:inverse@(172.20.120.7:3306)/pf
+        folder: fixtures
+        files:
+          - password.yml
