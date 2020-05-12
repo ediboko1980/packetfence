@@ -42,6 +42,7 @@ has '+haproxy_config_template' => (default => sub { "$conf_dir/haproxy-admin.con
 my $host_id = $pf::config::cluster::host_id;
 
 tie our %NetworkConfig, 'pfconfig::cached_hash', "resource::network_config($host_id)";
+tie @config_cluster_servers, 'pfconfig::cached_array', "resource::all_cluster_servers";
 
 sub generateConfig {
     my ($self,$quick) = @_;
@@ -65,7 +66,12 @@ sub generateConfig {
         my $mgmt_cfg = $Config{"interface $mgmt_int"};
         $tags{'mgmt_active_ip'} = pf::cluster::management_cluster_ip() || $mgmt_cfg->{'vip'} || $mgmt_cfg->{'ip'};
         $mgmt_cluster_ip = pf::cluster::cluster_ip($mgmt_int) || $mgmt_cfg->{'vip'} || $mgmt_cfg->{'ip'};
-        my @mgmt_backend_ip = values %{pf::cluster::members_ips($mgmt_int)};
+        my @mgmt_backend_ip;
+        if ($cluster_enabled) {
+            @mgmt_backend_ip = map { $_->{'management_ip'} } @config_cluster_servers;
+        } else {
+            @mgmt_backend_ip = values %{pf::cluster::members_ips($mgmt_int)};
+        }
         push @mgmt_backend_ip, '127.0.0.1' if !@mgmt_backend_ip;
 
         $tags{'management_ip'}
@@ -75,7 +81,7 @@ sub generateConfig {
 
 
         my $portal_preview_ip = portal_preview_ip();
-        my $mgmt_ip = portal_preview_ip();
+        my $mgmt_ip = $tags{'management_ip'};
         my $mgmt_backend_ip_config;
         my $mgmt_backend_ip_api_config;
         my $mgmt_srv_netdata .= <<"EOT";
@@ -172,6 +178,8 @@ EOT
 EOT
            }
 
+           if ($cluster_enabled) {
+
 $tags{'http_admin'} .= <<"EOT";
 
 frontend admin-https-$mgmt_ip
@@ -203,6 +211,8 @@ EOT
         default_backend static
 EOT
            }
+
+        }
 
         $tags{'http_admin'} .= <<"EOT";
 

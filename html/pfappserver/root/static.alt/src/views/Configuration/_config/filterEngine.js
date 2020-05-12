@@ -134,12 +134,7 @@ export const viewFields = {
         {
           namespace: 'id',
           component: pfFormInput,
-          attrs: {
-            ...attributesFromMeta(meta, 'id'),
-            ...{
-              disabled: (!isNew && !isClone)
-            }
-          }
+          attrs: attributesFromMeta(meta, 'id')
         }
       ]
     }
@@ -365,7 +360,7 @@ export const view = (form = {}, meta = {}) => {
     {
       tab: null,
       // meta indicates which fields are preset
-      rows: Object.keys(meta).sort((a, b) => {
+      rows: [ 'id', ...Object.keys(meta) ].sort((a, b) => {
         if (formKeyOrder.includes(a) && formKeyOrder.includes(b)) {
           return formKeyOrder.indexOf(a) - formKeyOrder.indexOf(b)
         } else if (formKeyOrder.includes(a)) {
@@ -493,7 +488,7 @@ export const validators = (form = {}, meta = {}) => {
     run_actions
   } = form
   // meta indicates which fields are preset
-  return Object.keys(meta).filter(field => {
+  return [ 'id', ...Object.keys(meta) ].filter(field => {
     switch (field) {
       case 'actions':
         return run_actions === 'enabled'
